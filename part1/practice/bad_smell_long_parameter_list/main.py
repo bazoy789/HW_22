@@ -9,42 +9,35 @@
 # В этом примере есть сразу несколько запахов плохого кода. Исправьте их
 #   (длинный метод, длинный список параметров)
 
-
 class Unit:
-    def move(self, field, x_coord, y_coord, direction, is_fly, crawl, speed = 1):
+    def __init__(self, x, y, state, spead=1):
+        self.state = state
+        self.spead = spead
+        self.x = x
+        self.y = y
+        self.field = Field()
 
-        if is_fly and crawl:
-            raise ValueError('Рожденный ползать летать не должен!')
+    def move(self, direction):
+        speed = self.get_spead()
 
-        if is_fly:
-            speed *= 1.2
-            if direction == 'UP':
-                new_y = y_coord + speed
-                new_x = x_coord
-            elif direction == 'DOWN':
-                new_y = y_coord - speed
-                new_x = x_coord
-            elif direction == 'LEFT':
-                new_y = y_coord
-                new_x = x_coord - speed
-            elif direction == 'RIGTH':
-                new_y = y_coord
-                new_x = x_coord + speed
-        if crawl:
-            speed *= 0.5
-            if direction == 'UP':
-                new_y = y_coord + speed
-                new_x = x_coord
-            elif direction == 'DOWN':
-                new_y = y_coord - speed
-                new_x = x_coord
-            elif direction == 'LEFT':
-                new_y = y_coord
-                new_x = x_coord - speed
-            elif direction == 'RIGTH':
-                new_y = y_coord
-                new_x = x_coord + speed
+        if direction == 'UP':
+            self.field.set_unit(coord_y=self.y + speed, coord_x=self.x, unit=self)
+        elif direction == 'DOWN':
+            self.field.set_unit(coord_y=self.y - speed, coord_x=self.x, unit=self)
+        elif direction == 'LEFT':
+            self.field.set_unit(coord_y=self.y, coord_x=self.x - speed, unit=self)
+        elif direction == 'RIGHT':
+            self.field.set_unit(coord_y=self.y, coord_x=self.x + speed, unit=self)
 
-            field.set_unit(x=new_x, y=new_y, unit=self)
+    def get_spead(self):
+        if self.state == 'fly':
+            return self.spead * 1.2
+        elif self.state == 'crawl':
+            return self.spead * 0.5
+        else:
+            raise ValueError('Эх')
 
-#     ...
+
+class Field:
+    def set_unit(self, coord_x: int, coord_y: int, unit=Unit):
+        pass
